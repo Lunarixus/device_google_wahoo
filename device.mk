@@ -681,7 +681,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Privileged permissions whitelist
 PRODUCT_COPY_FILES += \
-    device/google/wahoo/permissions/privapp-permissions-aosp_wahoo.xml:system/etc/permissions/privapp-permissions-aosp_wahoo.xml
+    device/google/wahoo/configs/permissions/privapp-permissions-aosp_wahoo.xml:system/etc/permissions/privapp-permissions-aosp_wahoo.xml
 
 PRODUCT_PACKAGES += \
     ipacm
@@ -699,7 +699,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Easel device feature
 PRODUCT_COPY_FILES += \
-    device/google/wahoo/permissions/com.google.hardware.camera.easel.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.google.hardware.camera.easel.xml
+    device/google/wahoo/configs/permissions/com.google.hardware.camera.easel.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.google.hardware.camera.easel.xml
 
 # QC time-daemon to use persist
 PRODUCT_PROPERTY_OVERRIDES += \
