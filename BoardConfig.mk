@@ -14,10 +14,17 @@
 # limitations under the License.
 #
 
+# Store the common tree path
 COMMON_PATH := device/google/wahoo
 
+# Target Qcom platform
 TARGET_BOARD_PLATFORM := msm8998
+QCOM_BOARD_PLATFORMS += msm8998
 
+# Include wahoo-specific HAL's
+USES_DEVICE_GOOGLE_WAHOO := true
+
+# CPU configuration
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
@@ -30,10 +37,13 @@ TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a73
 
+# Ignore some build-time warnings
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
+BUILD_BROKEN_ENFORCE_SYSPROP_OWNER := true
 
+# Kernel cmdline config
 BOARD_KERNEL_CMDLINE += androidboot.hardware=$(TARGET_BOOTLOADER_BOARD_NAME) androidboot.console=ttyMSM0 lpm_levels.sleep_disabled=1
 BOARD_KERNEL_CMDLINE += user_debug=31 msm_rtb.filter=0x37 ehci-hcd.park=3
 BOARD_KERNEL_CMDLINE += service_locator.enable=1
@@ -43,6 +53,7 @@ BOARD_KERNEL_CMDLINE += loop.max_part=7
 BOARD_KERNEL_CMDLINE += raid=noautodetect
 BOARD_KERNEL_CMDLINE += usbcore.autosuspend=7
 
+# Kernel build configs
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
 ifeq ($(filter-out walleye_kasan, muskie_kasan, $(TARGET_PRODUCT)),)
@@ -55,6 +66,7 @@ BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
 endif
 
+# A/B and boot image configuration
 TARGET_NO_BOOTLOADER ?= true
 TARGET_NO_KERNEL := false
 TARGET_NO_RECOVERY := true
@@ -66,10 +78,11 @@ BOARD_USES_METADATA_PARTITION := true
 # Partitions (listed in the file) to be wiped under recovery.
 TARGET_RECOVERY_FSTAB := device/google/wahoo/rootdir/etc/fstab.hardware
 
-# Verified Boot
+# Verified Boot (AVB 2.0)
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 
+# Partition size and filesystem configs
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2684354560
 BOARD_SYSTEMIMAGE_JOURNAL_SIZE := 0
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -82,19 +95,21 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_PRODUCTIMAGE_PARTITION_SIZE := 3221225472
 BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE  := ext4
 
+BOARD_ROOT_EXTRA_FOLDERS := persist firmware metadata
+TARGET_FS_CONFIG_GEN := device/google/wahoo/config.fs
+
 # DTBO partition definitions
 BOARD_PREBUILT_DTBOIMAGE := device/google/wahoo-kernel/dtbo.img
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608
 
+# Set individual partitions for copy files
 TARGET_COPY_OUT_VENDOR := vendor
-
 TARGET_COPY_OUT_PRODUCT := product
 
 # Install odex files into the other system image
 BOARD_USES_SYSTEM_OTHER_ODEX := true
 
-BOARD_ROOT_EXTRA_FOLDERS := persist firmware metadata
-
+# SEPolicy directories
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/wahoo/sepolicy/vendor
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS := device/google/wahoo/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := device/google/wahoo/sepolicy/private
@@ -102,13 +117,11 @@ BOARD_VENDOR_SEPOLICY_DIRS += device/google/wahoo/sepolicy/verizon
 BOARD_VENDOR_SEPOLICY_DIRS += hardware/google/pixel-sepolicy/citadel
 BOARD_VENDOR_SEPOLICY_DIRS += hardware/google/pixel-sepolicy/powerstats
 
-TARGET_FS_CONFIG_GEN := device/google/wahoo/config.fs
-
-QCOM_BOARD_PLATFORMS += msm8998
+# Bluetooth HAL
 BOARD_HAVE_BLUETOOTH_QCOM := true
 BOARD_USES_SDM845_BLUETOOTH_HAL := true
 
-# Camera
+# Camera HAL
 TARGET_USES_AOSP := true
 BOARD_QTI_CAMERA_32BIT_ONLY := true
 CAMERA_DAEMON_NOT_PRESENT := true
@@ -116,15 +129,15 @@ TARGET_USES_ION := true
 TARGET_USES_EASEL := true
 BOARD_USES_EASEL := true
 
-# GPS
+# GPS HAL
 TARGET_NO_RPC := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := default
 BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
 
-# RenderScript
+# RenderScript overrides
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 
-# wlan
+# WLAN HAL
 BOARD_WLAN_DEVICE := qcwcn
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_HOSTAPD_DRIVER := NL80211
@@ -151,17 +164,15 @@ AUDIO_FEATURE_ENABLED_USB_TUNNEL := true
 BOARD_ROOT_EXTRA_SYMLINKS := /vendor/lib/dsp:/dsp
 BOARD_SUPPORTS_SOUND_TRIGGER := true
 
-# Include whaoo modules
-USES_DEVICE_GOOGLE_WAHOO := true
-
-# Graphics
+# Graphics HAL
 TARGET_USES_GRALLOC1 := true
 TARGET_USES_HWC2 := true
 
+# Surfaceflinger vsync configuration
 VSYNC_EVENT_PHASE_OFFSET_NS := 2000000
 SF_VSYNC_EVENT_PHASE_OFFSET_NS := 6000000
 
-# Display
+# Display HAL
 TARGET_HAS_WIDE_COLOR_DISPLAY := true
 TARGET_HAS_HDR_DISPLAY := true
 TARGET_USES_COLOR_METADATA := true
@@ -173,6 +184,5 @@ DEVICE_FRAMEWORK_MANIFEST_FILE := device/google/wahoo/framework_manifest.xml
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := device/google/wahoo/device_framework_matrix.xml
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 
+# Set VNDK version
 BOARD_VNDK_VERSION := current
-
-BUILD_BROKEN_ENFORCE_SYSPROP_OWNER := true
